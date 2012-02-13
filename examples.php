@@ -10,10 +10,10 @@ $translator = new Yandex_Translate();
 
 $text = file_get_contents('text.txt');
 
-//Простой перевод
+//РџСЂРѕСЃС‚РѕР№ РїРµСЂРµРІРѕРґ
 echo  $translator->yandexTranslate('ru', 'uk', $text);
 echo '<br />';
-//Получение списков языков
+//РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєРѕРІ СЏР·С‹РєРѕРІ
 $langPairs = $translator->yandexGetLangsPairs();
 
 print_r($translator->yandexGet_FROM_Langs($langPairs));
@@ -21,7 +21,7 @@ echo '<br />';
 
 print_r($translator->yandexGet_TO_Langs($langPairs));
 echo '<br />';
-//Перевод большого текста
+//РџРµСЂРµРІРѕРґ Р±РѕР»СЊС€РѕРіРѕ С‚РµРєСЃС‚Р°
 
 $bigText = file_get_contents('text1.txt');
 
