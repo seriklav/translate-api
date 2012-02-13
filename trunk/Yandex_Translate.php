@@ -1,7 +1,7 @@
 <?php
 /*
- * Класс для использования API переводчика от Яндекс
- * Идеален для славянских языков, в частности русский <-> украинский
+ * РљР»Р°СЃСЃ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ API РїРµСЂРµРІРѕРґС‡РёРєР° РѕС‚ РЇРЅРґРµРєСЃ
+ * РРґРµР°Р»РµРЅ РґР»СЏ СЃР»Р°РІСЏРЅСЃРєРёС… СЏР·С‹РєРѕРІ, РІ С‡Р°СЃС‚РЅРѕСЃС‚Рё СЂСѓСЃСЃРєРёР№ <-> СѓРєСЂР°РёРЅСЃРєРёР№
  */
 class Yandex_Translate {
     protected $rootURL = 'http://translate.yandex.ru/tr.json';
@@ -9,12 +9,12 @@ class Yandex_Translate {
     protected $langCodesPairsListPath = '/getLangs';
 
     /**
-     * @var string - символ или тег конца абзаца
+     * @var string - СЃРёРјРІРѕР» РёР»Рё С‚РµРі РєРѕРЅС†Р° Р°Р±Р·Р°С†Р°
      */
     public $eolSymbol = '<br />';
 
     /**
-     * @var string - разделитель языков в запросе. Пока однозначно так определено Яндексом
+     * @var string - СЂР°Р·РґРµР»РёС‚РµР»СЊ СЏР·С‹РєРѕРІ РІ Р·Р°РїСЂРѕСЃРµ. РџРѕРєР° РѕРґРЅРѕР·РЅР°С‡РЅРѕ С‚Р°Рє РѕРїСЂРµРґРµР»РµРЅРѕ РЇРЅРґРµРєСЃРѕРј
      */
     public $langDelimiter = '-';
 
@@ -46,7 +46,7 @@ class Yandex_Translate {
     }
 
     /**
-     * @return mixed Получаем пары перевода from-to в виде 'ru-uk', 'en-fr'
+     * @return mixed РџРѕР»СѓС‡Р°РµРј РїР°СЂС‹ РїРµСЂРµРІРѕРґР° from-to РІ РІРёРґРµ 'ru-uk', 'en-fr'
      */
     public function yandexGetLangsPairs(){
 
@@ -57,7 +57,7 @@ class Yandex_Translate {
 
     /**
      * @param array $langPairs
-     * @return выделяем из пар все языки FROM
+     * @return РІС‹РґРµР»СЏРµРј РёР· РїР°СЂ РІСЃРµ СЏР·С‹РєРё FROM
      */
     public function yandexGet_FROM_Langs(array $langPairs){
         foreach ($langPairs as $langPair){
@@ -69,7 +69,7 @@ class Yandex_Translate {
 
     /**
      * @param array $langPairs
-     * @return выделяем из пар все языки TO
+     * @return РІС‹РґРµР»СЏРµРј РёР· РїР°СЂ РІСЃРµ СЏР·С‹РєРё TO
      */
     public function yandexGet_TO_Langs(array $langPairs){
         foreach ($langPairs as $langPair){
@@ -80,11 +80,11 @@ class Yandex_Translate {
     }
 
     /**
-     * Собственно перевод
-     * @param  $fromLang - с какого, код языка, 'ru' напр.
-     * @param  $toLang - на какой, код языка. Следите: не все языки FROM доступны в TO
-     * @param  $text - переводимый текст
-     * @return mixed - перевод. Следите за разделителями eolSymbol
+     * РЎРѕР±СЃС‚РІРµРЅРЅРѕ РїРµСЂРµРІРѕРґ
+     * @param  $fromLang - СЃ РєР°РєРѕРіРѕ, РєРѕРґ СЏР·С‹РєР°, 'ru' РЅР°РїСЂ.
+     * @param  $toLang - РЅР° РєР°РєРѕР№, РєРѕРґ СЏР·С‹РєР°. РЎР»РµРґРёС‚Рµ: РЅРµ РІСЃРµ СЏР·С‹РєРё FROM РґРѕСЃС‚СѓРїРЅС‹ РІ TO
+     * @param  $text - РїРµСЂРµРІРѕРґРёРјС‹Р№ С‚РµРєСЃС‚
+     * @return mixed - РїРµСЂРµРІРѕРґ. РЎР»РµРґРёС‚Рµ Р·Р° СЂР°Р·РґРµР»РёС‚РµР»СЏРјРё eolSymbol
      */
     public function yandexTranslate($fromLang, $toLang, $text) {
 
