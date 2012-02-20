@@ -10,6 +10,7 @@ class Yandex_Translate {
 
     /**
      * @var string - символ или тег конца абзаца
+     * Варианты: вывод в браузер - <br />, в файл - \n, может зависеть от ОС
      */
     public $eolSymbol = '<br />';
 
@@ -52,14 +53,18 @@ class Yandex_Translate {
 
         $jsonLangsPairs = $this->yandexConnect($this->langCodesPairsListPath);
 
-        return json_decode($jsonLangsPairs);
+        $rawOut =  json_decode($jsonLangsPairs, true);
+
+        return $rawOut['dirs'];
     }
 
     /**
-     * @param array $langPairs
-     * @return выделяем из пар все языки FROM
+     * @return получаем все языки FROM
      */
-    public function yandexGet_FROM_Langs(array $langPairs){
+    public function yandexGet_FROM_Langs(){
+
+        $langPairs = $this->yandexGetLangsPairs();
+
         foreach ($langPairs as $langPair){
             $smallArray = explode($this->langDelimiter, $langPair);
             $outerArray[$smallArray[0]] = $smallArray[0];
@@ -68,10 +73,12 @@ class Yandex_Translate {
     }
 
     /**
-     * @param array $langPairs
-     * @return выделяем из пар все языки TO
+     * @return получаем все языки TO
      */
-    public function yandexGet_TO_Langs(array $langPairs){
+    public function yandexGet_TO_Langs(){
+
+        $langPairs = $this->yandexGetLangsPairs();
+
         foreach ($langPairs as $langPair){
             $smallArray = explode($this->langDelimiter, $langPair);
             $outerArray[$smallArray[1]] = $smallArray[1];
@@ -88,12 +95,20 @@ class Yandex_Translate {
      */
     public function yandexTranslate($fromLang, $toLang, $text) {
 
+        //один из языков должен быть ru - проверяем, хотя переводчик и так вернет текст - сообщение об ошибке
+
+        if ($fromLang != 'ru' AND $toLang != 'ru'){
+            return 'Sorry, translation directly from '.$fromLang.' to '.$toLang.' is impossible';
+        }
+
         $transferData = array(
             'lang' => $fromLang.'-'.$toLang,
             'text' => $text,
         );
 
         $rawTranslate = $this->yandexConnect($this->translatePath, $transferData);
+
+        $rawTranslate = trim($rawTranslate, '"');
 
         $translate = str_replace('\n', $this->eolSymbol, $rawTranslate);
 
