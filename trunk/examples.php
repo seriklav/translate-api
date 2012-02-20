@@ -4,31 +4,52 @@ ini_set("display_errors", 1);
 include_once 'Yandex_Translate.php';
 include_once 'Big_Text_Translate.php';
 
-
-
 $translator = new Yandex_Translate();
+
+//Ниже для экспериментов раскомментируйте нужное
+
+//Массив языков, с которых можно переводить
+echo '<pre>';
+$pairs = $translator->yandexGetLangsPairs();
+//print_r($pairs);
+echo '</pre>';
+
+//Массив языков, на которые можно переводить
+echo '<pre>';
+$to = $translator->yandexGet_FROM_Langs();
+//print_r($to);
+echo '</pre>';
+
+
+//Перевод
 
 $text = file_get_contents('text.txt');
 
-//Простой перевод
-echo  $translator->yandexTranslate('ru', 'uk', $text);
-echo '<br />';
-//Получение списков языков
-$langPairs = $translator->yandexGetLangsPairs();
+//Это повторение значения свойства по умолчанию - см. код класса
+$translator->eolSymbol = '<br />';
 
-print_r($translator->yandexGet_FROM_Langs($langPairs));
-echo '<br />';
+$translatedText = $translator->yandexTranslate('ru', 'uk', $text);
 
-print_r($translator->yandexGet_TO_Langs($langPairs));
-echo '<br />';
-//Перевод большого текста
+//echo $translatedText;
 
-$bigText = file_get_contents('text1.txt');
 
-$piecer = new Big_Text_Translate();
-$pArray = $piecer->toBigPieces($bigText);
-$outText = '';
-foreach ($pArray as $p){
-    $outText = $outText.$translator->yandexTranslate('ru', 'uk', $p);
+//Работа с большими текстами
+
+$bigText = file_get_contents('text_big.txt');
+$textArray = Big_Text_Translate::toBigPieces($bigText);
+
+$numberOfTextItems = count($textArray);
+
+foreach ($textArray as $key=>$textItem){
+
+    //Показываем прогресс перевода
+    echo 'Переведен фрагмент '.$key.' из '.$numberOfTextItems.'<br />';
+    flush();
+
+    $translatedItem = $translator->yandexTranslate('ru', 'uk', $textItem);
+    $translatedArray[$key] = $translatedItem;
 }
-echo $outText;
+
+$translatedBigText = Big_Text_Translate::fromBigPieces($translatedArray);
+
+echo $translatedBigText;

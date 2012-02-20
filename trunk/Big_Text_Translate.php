@@ -1,38 +1,38 @@
 <?php
-class Big_Text_Translate {
+abstract class Big_Text_Translate {
     /**
      * @var int - максимальное число символов для отправки переводчику
      */
-    public $symbolLimit = 2000;
+    public static $symbolLimit = 2000;
 
     /**
-     * @var int - максимально число символов, переводимое за время до таймаута
+     * @var string- символы, по которым текст делится на предложения
      */
-    public $totalSymbolLimit = 60000;
+    public static $sentensesDelimiter = '.';
 
     /**
-     * @var - символы, по которым текст делится на предложения
+     * @static
+     * @param  $text - исходный текст для разбиения на предложения
+     * @return array - массив предложений, еще не окончательный
      */
-    public $sentensesDelimiter = '.';
-
-    protected function toSentenses ($text) {
-        $sentArray = explode($this->sentensesDelimiter, $text);
+    protected static function toSentenses ($text) {
+        $sentArray = explode(self::$sentensesDelimiter, $text);
         return $sentArray;
     }
 
     /**
      * Разделение текста на массив больших кусков
-     * @param  $text
-     * @return
+     * @param  string $text - большой текстовый фрагмент, требующий разделения на куски
+     * @return  array - массив элементов, каждый из которых не превышает предельного числа символов
      */
 
-    public function toBigPieces ($text) {
-        $sentArray = $this->toSentenses($text);
+    public static function toBigPieces ($text) {
+        $sentArray = self::toSentenses($text);
         $i = 0;
         $bigPiecesArray[0] = '';
         for ($k = 0; $k < count($sentArray); $k++) {
-            $bigPiecesArray[$i] .= $sentArray[$k].$this->sentensesDelimiter;
-            if (strlen($bigPiecesArray[$i]) > $this->symbolLimit){
+            $bigPiecesArray[$i] .= $sentArray[$k].self::$sentensesDelimiter;
+            if (strlen($bigPiecesArray[$i]) > self::$symbolLimit){
                 $i++;
                 $bigPiecesArray[$i] = '';
             }
@@ -42,24 +42,16 @@ class Big_Text_Translate {
     }
 
     /**
-     * Склеивание текста. Собственно, можно обойтись без этой ф-и (см. примеры)
-     * @param array $bigPiecesArray
-     * @return string
+     * Склеивание текста
+     * @param array $bigPiecesArray - массив переведенных кусков текста, в произвольном порядке,
+     * но ключи должна соответствовать исходному тексту
+     * @return string - "склеенный" текст
      */
-    public function fromBigPieces (array $bigPiecesArray) {
-        return implode($bigPiecesArray);
-    }
+    public static function fromBigPieces (array $bigPiecesArray) {
 
-    /**
-     * Проверка текста на превышение максимального размера, при первышении - false
-     * @param  $text
-     * @return bool
-     */
-    public function symbolCountControl ($text){
-        return true;
-        if (strlen($text) > $this->totalSymbolLimit){
-            return false;
-        }
+        ksort($bigPiecesArray);
+
+        return implode($bigPiecesArray);
     }
 
 }
